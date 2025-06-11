@@ -25,8 +25,9 @@ def get_reel_info(url):
     print(f"[DEBUG] get_reel_info received URL: {url}")
     ydl_opts = {
         "quiet": True,
-        "cookiefile": "instagram_cookies.txt",
+        "cookiefile": os.path.abspath("cookie.txt"),
         "noplaylist": True,
+        "nocheckcertificate": True,
         "cachedir": False,  # 🔥 Ye important hai!
     }
     with YoutubeDL(ydl_opts) as ydl:
@@ -41,16 +42,16 @@ logging.basicConfig(level=logging.INFO)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 PORT = int(os.environ.get("PORT", 8443))
 DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN")
-INSTAGRAM_COOKIE = os.getenv("INSTAGRAM_COOKIE")
-print("[DEBUG] Using cookie:", INSTAGRAM_COOKIE)
+IG_COOKIE = os.getenv("IG_COOKIE")
+print("[DEBUG] Using cookie:", IIG_COOKIE)
 
 print("[DEBUG] Cookie file path:", os.path.abspath("cookie.txt"))
 print("[DEBUG] Cookie file exists:", os.path.exists("cookie.txt"))
 
 # Check for INSTAGRAM_COOKIE early
-if not INSTAGRAM_COOKIE:
-    print("[ERROR] INSTAGRAM_COOKIE not set.")
-    exit("❌ Please set INSTAGRAM_COOKIE in Railway Environment Variables.")
+if not IG_COOKIE:
+    print("[ERROR] IG_COOKIE not set.")
+    exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
 downloaded_reel_ids = set()
 
@@ -83,9 +84,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # fallback
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "👀 Bot zinda hai, but please send a valid Instagram reel link."
-    )
+    await update.message.reply_text("👀 Send a valid Instagram Reel link.")
 
     url = update.message.text.strip().split("?")[0]
     print("[DEBUG] Reel URL:", url)
@@ -121,7 +120,7 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("⏳ Downloading reel, please wait...")
 
     with open("cookie.txt", "w", encoding="utf-8") as f:
-        f.write(INSTAGRAM_COOKIE.strip())
+        f.write(IG_COOKIE.strip())
 
     try:
         reel_id, title = get_reel_info(url)
