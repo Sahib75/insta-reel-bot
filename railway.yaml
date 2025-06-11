@@ -1,0 +1,12 @@
+# railway.yaml
+services:
+  - name: reel-downloader-bot
+    startCommand: "python bot.py"
+    buildCommand: "pip install -r requirements.txt"
+    envVars:
+  - key: BOT_TOKEN
+    sync: false
+        
+        
+        
+        
