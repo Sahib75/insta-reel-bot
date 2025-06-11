@@ -141,7 +141,7 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         ydl_opts = {
             "outtmpl": "downloads/%(title).50s.%(ext)s",
-            "cookiefile": os.path.abspath("cookie.txt")
+            "cookiefile": os.path.abspath("cookie.txt"),
             "nocheckcertificate": True,
             "cachedir": False,
             "quiet": True,
