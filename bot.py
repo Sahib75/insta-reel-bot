@@ -45,6 +45,12 @@ DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN")
 IG_COOKIE = os.getenv("IG_COOKIE")
 print("[DEBUG] Using cookie:", IG_COOKIE)
 
+if IG_COOKIE:
+    cookie_content = IG_COOKIE.replace("\\n", "\n")
+    with open("cookie.txt", "w", encoding="utf-8") as f:
+        f.write(cookie_content)
+        print("[DEBUG] cookie.txt created from env variable")
+
 print("[DEBUG] Cookie file path:", os.path.abspath("cookie.txt"))
 print("[DEBUG] Cookie file exists:", os.path.exists("cookie.txt"))
 
@@ -118,9 +124,6 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"[DEBUG] Cleaned URL: {url}")
 
     await update.message.reply_text("⏳ Downloading reel, please wait...")
-
-    with open("cookie.txt", "w", encoding="utf-8") as f:
-        f.write(IG_COOKIE.strip())
 
     try:
         reel_id, title = get_reel_info(url)
