@@ -43,7 +43,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 PORT = int(os.environ.get("PORT", 8443))
 DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN")
 IG_COOKIE = os.getenv("IG_COOKIE")
-print("[DEBUG] Using cookie:", IIG_COOKIE)
+print("[DEBUG] Using cookie:", IG_COOKIE)
 
 print("[DEBUG] Cookie file path:", os.path.abspath("cookie.txt"))
 print("[DEBUG] Cookie file exists:", os.path.exists("cookie.txt"))
