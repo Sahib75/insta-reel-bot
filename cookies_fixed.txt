@@ -1,0 +1,12 @@
+.instagram.com	TRUE	/	TRUE	1783751581	ps_n	1
+.instagram.com	TRUE	/	TRUE	1783751586	datr	nItCaJyyhxuoliUKZZul0f3F
+.instagram.com	TRUE	/	TRUE	1780728994	ig_nrcb	1
+.instagram.com	TRUE	/	TRUE	1757524897	ds_user_id	75050363583
+.instagram.com	TRUE	/	TRUE	1784308897	csrftoken	6ii0ELkEr1nCEoByGJDmlBnFMsFtmMCl
+.instagram.com	TRUE	/	TRUE	1780727586	ig_did	F99C0934-2CA3-4EF4-9110-E0F9248329B1
+.instagram.com	TRUE	/	TRUE	1783751581	ps_l	1
+.instagram.com	TRUE	/	TRUE	1750353690	wd	1280x574
+.instagram.com	TRUE	/	TRUE	1783752966	mid	aEKRBgALAAGLVjG1lW-qNpw8YJj4
+.instagram.com	TRUE	/	TRUE	1781249454	sessionid	75050363583%3AEmY3ejtSzdRB1f%3A22%3AAYd4NS4ONAJ-VO641F_yqod4wCu9vdcUcGClGxRSWQ
+.instagram.com	TRUE	/	TRUE	1750353690	dpr	1.5
+.instagram.com	TRUE	/	TRUE	1749835299	rur	"EAG\05475050363583\0541781284897:01fe27095248d3ab97d6c88ae40899a43fdb3a8c4b89942e49f7531c2b3e0ea6fec24abd"
