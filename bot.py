@@ -1,6 +1,7 @@
 import os
 import logging
 import traceback
+import codecs
 from urllib.parse import urlparse
 from telegram import Update
 from telegram.ext import (
@@ -26,7 +27,7 @@ if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
 # Write cookie.txt from env
-cookie_content = IG_COOKIE.replace("\\n", "\n").replace("\\t", "\t")
+cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
 with open("cookie.txt", "w", encoding="utf-8") as f:
     f.write(cookie_content)
 
