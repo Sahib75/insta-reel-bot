@@ -43,6 +43,20 @@ def get_current_proxy():
     return CURRENT_PROXY["value"]
 
 
+async def cmd_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    help_text = """
+🛠 **Available Commands:**
+
+/start - Bot ko start kare  
+/proxy - Current proxy dikhaye  
+/cmd - Yeh command list dikhaye  
+(reel link) - Instagram reel ka video bheje
+
+🔁 Proxy auto-rotate ho raha hai har 3 minute me.
+"""
+    await update.message.reply_text(help_text, parse_mode="Markdown")
+
+
 async def rotate_proxy_every(interval_seconds: int):
     while True:
         set_random_proxy()
@@ -160,6 +174,7 @@ async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("proxy", proxy_command))
+    app.add_handler(CommandHandler("cmd", cmd_command))
     app.add_handler(MessageHandler(filters.Regex("instagram.com/reel"), download_reel))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, fallback))
 
