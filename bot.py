@@ -44,16 +44,17 @@ def get_current_proxy():
 
 
 async def cmd_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    help_text = """
-🛠 **Available Commands:**
-
-/start - Bot ko start kare  
-/proxy - Current proxy dikhaye  
-/cmd - Yeh command list dikhaye  
-(reel link) - Instagram reel ka video bheje
-
-🔁 Proxy auto-rotate ho raha hai har 3 minute me.
-"""
+    help_text = (
+        "🛠️ *Available Commands:*\n\n"
+        "/start - Bot ko start kare\n"
+        "/proxy - Current proxy dikhaye\n"
+        "/cmd - Yeh command list dikhaye\n"
+        "/rotate - Naya random proxy set kare\n"
+        "/switch <index> - Specific proxy lagaye (index 0 se shuru)\n"
+        "/allproxies - Sabhi proxy list dikhaye\n"
+        "(reel link) - Instagram reel ka video bheje\n\n"
+        "🌀 Proxy auto-rotate ho raha hai har 3 minute me.",
+    )
     await update.message.reply_text(help_text, parse_mode="Markdown")
 
 
@@ -174,6 +175,9 @@ async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("proxy", proxy_command))
+    app.add_handler(CommandHandler("rotate", rotate_proxy_command))
+    app.add_handler(CommandHandler("switch", switch_proxy_command))
+    app.add_handler(CommandHandler("allproxies", list_all_proxies_command))
     app.add_handler(CommandHandler("cmd", cmd_command))
     app.add_handler(MessageHandler(filters.Regex("instagram.com/reel"), download_reel))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, fallback))
