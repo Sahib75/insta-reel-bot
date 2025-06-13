@@ -8,8 +8,9 @@ venv/
 # Environment files
 .env
 cookie.txt
+downloads/
 
 # OS files
 .DS_Store
 Thumbs.dbcookies.txt
-cookie.txt
+
