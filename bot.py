@@ -183,8 +183,6 @@ async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("proxy", proxy_command))
-    app.add_handler(CommandHandler("switch", switch_proxy_command))
-    app.add_handler(CommandHandler("allproxies", list_all_proxies_command))
     app.add_handler(CommandHandler("cmd", cmd_command))
     app.add_handler(MessageHandler(filters.Regex("instagram.com/reel"), download_reel))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, fallback))
