@@ -72,6 +72,14 @@ async def proxy_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+async def switch_proxy_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    set_random_proxy()
+    current = get_current_proxy()
+    await update.message.reply_text(
+        f"🔀 Proxy switched!\n\nNew Proxy: `{current}`", parse_mode="Markdown"
+    )
+
+
 nest_asyncio.apply()
 logging.basicConfig(level=logging.INFO)
 
@@ -175,7 +183,6 @@ async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("proxy", proxy_command))
-    app.add_handler(CommandHandler("rotate", rotate_proxy_command))
     app.add_handler(CommandHandler("switch", switch_proxy_command))
     app.add_handler(CommandHandler("allproxies", list_all_proxies_command))
     app.add_handler(CommandHandler("cmd", cmd_command))
