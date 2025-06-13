@@ -66,22 +66,31 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = clean_reel_url(clean_instagram_url(update.message.text.strip()))
-    await update.message.reply_text("⏳ Downloading reel, please wait...")
+    msg = await update.message.reply_text("⏳ Downloading reel, please wait...")
 
     try:
         reel_id, title = get_reel_info(url)
+
+        if reel_id in downloaded_reel_ids:
+            await update.message.reply_text("⚠️ Ye reel pehle hi download ho chuki hai.")
+            return
+
+        downloaded_reel_ids.add(reel_id)
+
+        # ab yahan se download karke video bhejo
+        video_path = download_from_url(url, title)
+
+        await update.message.reply_video(video_path)
+
+        # ✅ ab message delete karo
+        await msg.delete()
+
     except Exception as e:
         print("[ERROR] Info fetch failed:", e)
         await update.message.reply_text(
-            "❌ Failed to fetch reel info. Cookie ya link invalid ho sakta hai."
+            "❌ Failed to fetch reel info. link invalid ho sakta hai."
         )
         return
-
-    if reel_id in downloaded_reel_ids:
-        await update.message.reply_text("⚠️ Ye reel pehle hi download ho chuki hai.")
-        return
-
-    downloaded_reel_ids.add(reel_id)
 
     try:
         ydl_opts = {
