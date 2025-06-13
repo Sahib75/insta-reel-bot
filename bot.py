@@ -22,9 +22,8 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 IG_COOKIE = os.getenv("IG_COOKIE")
 proxy_list_raw = os.getenv("ALL_PROXIES", "")
 proxy_list = proxy_list_raw.split(",") if proxy_list_raw else []
-
 SOCKS5_PROXY = random.choice(proxy_list) if proxy_list else None
-print("🌀 Using proxy:", SOCKS5_PROXY)  # Debug line
+print("🌀 Using proxy:", SOCKS5_PROXY)
 
 if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
@@ -60,6 +59,26 @@ def get_reel_info(url):
         return info.get("id"), info.get("title")
 
 
+def download_from_url(url, title):
+    ydl_opts = {
+        "outtmpl": "downloads/%(title).50s.%(ext)s",
+        "cookiefile": os.path.abspath("cookie.txt"),
+        "nocheckcertificate": True,
+        "cachedir": False,
+        "quiet": True,
+        "noplaylist": True,
+        "format": "mp4",
+        "proxy": SOCKS5_PROXY,
+        "socket_timeout": 10,
+        "force_ipv4": True,
+    }
+
+    with YoutubeDL(ydl_opts) as ydl:
+        info = ydl.extract_info(url, download=True)
+        video_path = ydl.prepare_filename(info)
+    return video_path
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("👋 Send me an Instagram Reel link to download.")
 
@@ -81,35 +100,6 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_video(f)
 
         await msg.delete()
-
-    except Exception as e:
-        print("[ERROR] Info fetch failed:", e)
-        await update.message.reply_text(
-            "❌ Failed to fetch reel info. Link is invalid."
-        )
-    return
-
-    try:
-
-        def download_from_url(url, title):
-            ydl_opts = {
-                "outtmpl": "downloads/%(title).50s.%(ext)s",
-                "cookiefile": os.path.abspath("cookie.txt"),
-                "nocheckcertificate": True,
-                "cachedir": False,
-                "quiet": True,
-                "noplaylist": True,
-                "format": "mp4",
-                "proxy": SOCKS5_PROXY,
-                "socket_timeout": 10,
-                "force_ipv4": True,
-            }
-
-        with YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=True)
-            video_path = ydl.prepare_filename(info)
-
-        return video_path
 
     except Exception as e:
         print("[ERROR] Download/send failed:", e)
