@@ -84,7 +84,7 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     except Exception as e:
         print("[ERROR] Info fetch failed:", e)
-        await update.message.reply_text("❌ Failed to fetch reel info. link invalid ho sakta hai.")
+        await update.message.reply_text("❌ Failed to fetch reel info. Link is invalid.")
     return 
            
     try:
