@@ -88,6 +88,8 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "noplaylist": True,
             "format": "mp4",
             "proxy": SOCKS5_PROXY,
+            "socket_timeout": 10,
+            "force_ipv4": True,
         }
 
         with YoutubeDL(ydl_opts) as ydl:

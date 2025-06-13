@@ -1,7 +1,0 @@
-.instagram.com	TRUE	\/	TRUE	sessionid	1718021020	75050363583%3AEmY3ejtSzdRB1f%3A22%3AAYd4NS4ONAJ-VO641F_yqod4wCu9vdcUcGClGxRSWQ
-.instagram.com	TRUE	\/	TRUE	csrftoken	1784301642	6ii0ELkEr1nCEoByGJDmlBnFMsFtmMCl
-.instagram.com	TRUE	\/	TRUE	mid	1783752966	aEKRBgALAAGLVjG1lW-qNpw8YJj4
-.instagram.com	TRUE	\/	TRUE	datr	1783751586	nItCaJyyhxuoliUKZZul0f3F
-.instagram.com	TRUE	\/	TRUE	ds_user_id	1757517642	75050363583
-.instagram.com	TRUE	\/	TRUE	ig_nrcb	1780728994	1
-.instagram.com	TRUE	\/	TRUE	ig_did	1780727586	F99C0934-2CA3-4EF4-9110-E0F9248329B1
