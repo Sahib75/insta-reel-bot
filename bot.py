@@ -1,5 +1,5 @@
-import codecs
 import os
+import codecs
 import logging
 import traceback
 from urllib.parse import urlparse
@@ -30,10 +30,9 @@ print("🔍 Escaped Preview:", IG_COOKIE[:100])
 # Write cookie.txt from env
 
 cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
-
 print("🔓 Decoded Preview:", cookie_content[:100])
 
-with open("cookie.txt", "w", encoding="utf-8") as f:
+with open("cookie.txt", "w", encoding="utf-8", newline="\n") as f:
     f.write(cookie_content)
 
 print("✅ cookie.txt ready")
