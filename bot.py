@@ -15,15 +15,50 @@ from telegram.ext import (
 from yt_dlp import YoutubeDL
 import nest_asyncio
 
-nest_asyncio.apply()
-logging.basicConfig(level=logging.INFO)
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 IG_COOKIE = os.getenv("IG_COOKIE")
 proxy_list_raw = os.getenv("ALL_PROXIES", "")
 proxy_list = proxy_list_raw.split(",") if proxy_list_raw else []
 SOCKS5_PROXY = random.choice(proxy_list) if proxy_list else None
 print("🌀 Using proxy:", SOCKS5_PROXY)
+
+PROXY_LIST = [
+    "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@mel.socks.ipvanish.com:1080",
+    "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@lon.socks.ipvanish.com:1080",
+    "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@ams.socks.ipvanish.com:1080",
+    "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@dal.socks.ipvanish.com:1080",
+    "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@nyc.socks.ipvanish.com:1080",
+    "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@phx.socks.ipvanish.com:1080",
+]
+
+CURRENT_PROXY = {"value": PROXY_LIST[0]}  # Default proxy
+
+
+def set_random_proxy():
+    CURRENT_PROXY["value"] = random.choice(PROXY_LIST)
+    os.environ["SOCKS5_PROXY"] = CURRENT_PROXY["value"]
+
+
+def get_current_proxy():
+    return CURRENT_PROXY["value"]
+
+
+async def rotate_proxy_every(interval_seconds: int):
+    while True:
+        set_random_proxy()
+        print(f"🔁 Proxy rotated to: {get_current_proxy()}")
+        await asyncio.sleep(interval_seconds)
+
+
+async def proxy_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    current = get_current_proxy()
+    await update.message.reply_text(
+        f"🛰️ Current Proxy in use:\n`{current}`", parse_mode="Markdown"
+    )
+
+
+nest_asyncio.apply()
+logging.basicConfig(level=logging.INFO)
 
 if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
@@ -124,8 +159,12 @@ async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("proxy", proxy_command))
     app.add_handler(MessageHandler(filters.Regex("instagram.com/reel"), download_reel))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, fallback))
+
+    asyncio.create_task(rotate_proxy_every(180))  # 180 seconds = 3 minutes
+
     await app.run_polling()
 
 
