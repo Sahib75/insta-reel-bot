@@ -70,29 +70,25 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         reel_id, title = get_reel_info(url)
-
         if reel_id in downloaded_reel_ids:
             await update.message.reply_text("⚠️ Ye reel pehle hi download ho chuki hai.")
             return
-
+        
         downloaded_reel_ids.add(reel_id)
-
-        # ab yahan se download karke video bhejo
         video_path = download_from_url(url, title)
 
-        await update.message.reply_video(video_path)
+        with open(video_path, "rb") as f:
+            await update.message.reply_video(f)
 
-        # ✅ ab message delete karo
         await msg.delete()
-
+    
     except Exception as e:
         print("[ERROR] Info fetch failed:", e)
-        await update.message.reply_text(
-            "❌ Failed to fetch reel info. link invalid ho sakta hai."
-        )
-        return
-
+        await update.message.reply_text("❌ Failed to fetch reel info. link invalid ho sakta hai.")
+    return 
+           
     try:
+        def download_from_url(url, title):
         ydl_opts = {
             "outtmpl": "downloads/%(title).50s.%(ext)s",
             "cookiefile": os.path.abspath("cookie.txt"),
@@ -109,9 +105,8 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             video_path = ydl.prepare_filename(info)
-
-        with open(video_path, "rb") as f:
-            await update.message.reply_video(f)
+        
+        return video_path
 
     except Exception as e:
         print("[ERROR] Download/send failed:", e)
