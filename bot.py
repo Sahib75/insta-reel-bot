@@ -1,3 +1,4 @@
+import random
 import os
 import codecs
 import logging
@@ -19,7 +20,11 @@ logging.basicConfig(level=logging.INFO)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 IG_COOKIE = os.getenv("IG_COOKIE")
-SOCKS5_PROXY = os.getenv("SOCKS5_PROXY")
+proxy_list_raw = os.getenv("ALL_PROXIES", "")
+proxy_list = proxy_list_raw.split(",") if proxy_list_raw else []
+
+SOCKS5_PROXY = random.choice(proxy_list) if proxy_list else None
+print("🌀 Using proxy:", SOCKS5_PROXY)  # Debug line
 
 if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
