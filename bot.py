@@ -20,16 +20,15 @@ logging.basicConfig(level=logging.INFO)
 
 # ENV variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-DOMAIN = os.getenv("RAILWAY_PUBLIC_DOMAIN")
 IG_COOKIE = os.getenv("IG_COOKIE")
 
-if not IG_COOKIE:
-    exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
-
 # Write cookie.txt from env
+escaped = """.instagram.com\tTRUE\t/\tTRUE\t1784312561\tcsrftoken\tK8w30dVuthWzTVuwL1pL0QWbFkC74HOX\n.instagram.com\tTRUE\t/\tTRUE\t1784312561\tmid\taEsa8QALAAFvE3aYs1q7hAXQNWyB\n.instagram.com\tTRUE\t/\tTRUE\t1781288561\tig_did\t6E73DF01-392E-4FEB-9F47-44D98EC2D72B\n.instagram.com\tTRUE\t/\tTRUE\t1781288561\tig_nrcb\t1""""
 cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
 with open("cookie.txt", "w", encoding="utf-8") as f:
     f.write(cookie_content)
+
+print("✅ cookie.txt ready")
 
 print("[DEBUG] Cookie file created:", os.path.exists("cookie.txt"))
 
