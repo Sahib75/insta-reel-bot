@@ -73,7 +73,7 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if reel_id in downloaded_reel_ids:
             await update.message.reply_text("⚠️ Ye reel pehle hi download ho chuki hai.")
             return
-        
+
         downloaded_reel_ids.add(reel_id)
         video_path = download_from_url(url, title)
 
@@ -81,31 +81,34 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_video(f)
 
         await msg.delete()
-    
+
     except Exception as e:
         print("[ERROR] Info fetch failed:", e)
-        await update.message.reply_text("❌ Failed to fetch reel info. Link is invalid.")
-    return 
-           
+        await update.message.reply_text(
+            "❌ Failed to fetch reel info. Link is invalid."
+        )
+    return
+
     try:
+
         def download_from_url(url, title):
-        ydl_opts = {
-            "outtmpl": "downloads/%(title).50s.%(ext)s",
-            "cookiefile": os.path.abspath("cookie.txt"),
-            "nocheckcertificate": True,
-            "cachedir": False,
-            "quiet": True,
-            "noplaylist": True,
-            "format": "mp4",
-            "proxy": SOCKS5_PROXY,
-            "socket_timeout": 10,
-            "force_ipv4": True,
-        }
+            ydl_opts = {
+                "outtmpl": "downloads/%(title).50s.%(ext)s",
+                "cookiefile": os.path.abspath("cookie.txt"),
+                "nocheckcertificate": True,
+                "cachedir": False,
+                "quiet": True,
+                "noplaylist": True,
+                "format": "mp4",
+                "proxy": SOCKS5_PROXY,
+                "socket_timeout": 10,
+                "force_ipv4": True,
+            }
 
         with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             video_path = ydl.prepare_filename(info)
-        
+
         return video_path
 
     except Exception as e:
