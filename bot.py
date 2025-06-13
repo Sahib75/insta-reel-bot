@@ -1,7 +1,7 @@
+import codecs
 import os
 import logging
 import traceback
-import codecs
 from urllib.parse import urlparse
 from telegram import Update
 from telegram.ext import (
@@ -20,15 +20,18 @@ logging.basicConfig(level=logging.INFO)
 
 # ENV variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-IG_COOKIE = os.getenv("IG_COOKIE")
+IG_COOKIE = os.environ.get("IG_COOKIE")
+
+if not IG_COOKIE:
+    exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
 # Write cookie.txt from env
 cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
+
 with open("cookie.txt", "w", encoding="utf-8") as f:
     f.write(cookie_content)
 
 print("✅ cookie.txt ready")
-
 print("[DEBUG] Cookie file created:", os.path.exists("cookie.txt"))
 
 # Track downloaded reels to avoid duplicates
