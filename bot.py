@@ -28,9 +28,10 @@ if not IG_COOKIE:
 print("🔍 Escaped Preview:", IG_COOKIE[:100])
 
 # Write cookie.txt from env
-cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
 
 print("🔓 Decoded Preview:", cookie_content[:100])
+
+cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
 
 with open("cookie.txt", "w", encoding="utf-8") as f:
     f.write(cookie_content)
