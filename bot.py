@@ -14,35 +14,23 @@ from telegram.ext import (
 from yt_dlp import YoutubeDL
 import nest_asyncio
 
-# Setup
 nest_asyncio.apply()
 logging.basicConfig(level=logging.INFO)
 
-# ENV variables
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-IG_COOKIE = os.environ.get("IG_COOKIE")
+IG_COOKIE = os.getenv("IG_COOKIE")
+SOCKS5_PROXY = os.getenv("SOCKS5_PROXY")
 
 if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
-print("🔍 Escaped Preview:", IG_COOKIE[:100])
-
-# Write cookie.txt from env
-
 cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
-print("🔓 Decoded Preview:", cookie_content[:100])
-
 with open("cookie.txt", "w", encoding="utf-8", newline="\n") as f:
     f.write(cookie_content)
 
-print("✅ cookie.txt ready")
-print("[DEBUG] Cookie file created:", os.path.exists("cookie.txt"))
-
-# Track downloaded reels to avoid duplicates
 downloaded_reel_ids = set()
 
 
-# Clean URL
 def clean_reel_url(url):
     return url.split("?")[0] if "?" in url else url
 
@@ -60,21 +48,19 @@ def get_reel_info(url):
         "noplaylist": True,
         "nocheckcertificate": True,
         "cachedir": False,
+        "proxy": SOCKS5_PROXY,
     }
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         return info.get("id"), info.get("title")
 
 
-# /start command
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("👋 Send me an Instagram Reel link to download.")
 
 
-# Main reel downloader
 async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = clean_reel_url(clean_instagram_url(update.message.text.strip()))
-    print(f"[DEBUG] Cleaned URL: {url}")
     await update.message.reply_text("⏳ Downloading reel, please wait...")
 
     try:
@@ -101,6 +87,7 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "quiet": True,
             "noplaylist": True,
             "format": "mp4",
+            "proxy": SOCKS5_PROXY,
         }
 
         with YoutubeDL(ydl_opts) as ydl:
@@ -115,10 +102,8 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Error aaya reel download/send karne me.")
 
 
-# Invalid link fallback
 async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     url = update.message.text.strip()
-    print("[DEBUG] Fallback URL received:", url)
 
     if "instagram.com/reel/" not in url:
         if "instagram.com/p/" in url or "instagram.com/tv/" in url:
@@ -132,7 +117,6 @@ async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await download_reel(update, context)
 
 
-# Start the bot
 async def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
