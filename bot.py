@@ -111,13 +111,14 @@ def get_reel_info(url):
     print(f"[DEBUG] Getting reel info: {url}")
     ydl_opts = {
         "quiet": True,
-        "cookiefile": "cookie.txt"
+        "cookiefile": "cookie.txt",
         "format": "mp4",
         "noplaylist": True,
         "nocheckcertificate": True,
         "cachedir": False,
         "proxy": SOCKS5_PROXY,
     }
+
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         return info.get("id"), info.get("title")
