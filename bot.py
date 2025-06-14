@@ -18,10 +18,13 @@ import nest_asyncio
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 IG_COOKIE = os.getenv("IG_COOKIE")
-proxy_list_raw = os.getenv("ALL_PROXIES", "")
+PROXY_LIST = os.getenv("ALL_PROXIES", "").split(",")
 proxy_list = proxy_list_raw.split(",") if proxy_list_raw else []
 SOCKS5_PROXY = random.choice(proxy_list) if proxy_list else None
 print("🌀 Using proxy:", SOCKS5_PROXY)
+
+def get_random_proxy():
+    return random.choice(PROXY_LIST) if PROXY_LIST else None
 
 PROXY_LIST = [
     "socks5://ZZbPYzrL77t:ewQw8Y0C2h36@mel.socks.ipvanish.com:1080",
@@ -105,21 +108,16 @@ def clean_instagram_url(url):
 
 def get_reel_info(url):
     print(f"[DEBUG] Getting reel info: {url}")
-
-    set_random_proxy()
-    SOCKS5_PROXY = CURRENT_PROXY["value"]
-    print(f"🌍 Rotated Proxy: {SOCKS5_PROXY}")
-
     ydl_opts = {
         "quiet": True,
-        "cookiefile": "cookie.txt",
+        "cookiefile": os.path.abspath("cookie.txt"),
         "format": "mp4",
         "noplaylist": True,
         "nocheckcertificate": True,
         "cachedir": False,
-        "proxy": SOCKS5_PROXY,
+        "proxy": proxy,
     }
-
+    
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=False)
         return info.get("id"), info.get("title")
@@ -130,49 +128,60 @@ def download_from_url(url, title):
         os.makedirs("downloads")
 
     ydl_opts = {
-        "outtmpl": "downloads/%(title).50s.%(ext)s",
+        "outtmpl": f"downloads/{title}.%(ext)s",
         "cookiefile": "cookie.txt",
         "nocheckcertificate": True,
         "cachedir": False,
         "quiet": True,
         "noplaylist": True,
         "format": "mp4",
-        "proxy": SOCKS5_PROXY,
+        "proxy": proxy,
         "socket_timeout": 10,
         "force_ipv4": True,
     }
 
+    print(f"🌐 Rotated Proxy Being Used: {proxy}")
+
     with YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         video_path = ydl.prepare_filename(info)
-    return video_path
+        return video_path
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("👋 Send me an Instagram Reel link to download.")
-
+    
 
 async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    set_random_proxy() 
+    
     url = clean_reel_url(clean_instagram_url(update.message.text.strip()))
-    msg = await update.message.reply_text("⏳ Downloading reel, please wait...")
+    proxy = get_random_proxy()  # This is now used dynamically
+    
+    await update.message.reply_text("⏳ Downloading reel, please wait...")
 
     try:
-        reel_id, title = get_reel_info(url)
-        if reel_id in downloaded_reel_ids:
-            await update.message.reply_text("⚠️ Ye reel pehle hi download ho chuki hai.")
-            return
+        reel_id, title = get_reel_info(url, proxy)
+    except Exception as e:
+        print(f"[ERROR] Info fetch failed: {e}")
+        await update.message.reply_text("❌ Failed to fetch reel info.")
+        return
 
-        downloaded_reel_ids.add(reel_id)
-        video_path = download_from_url(url, title)
+    try:
+        video_path = download_from_url(url, title, proxy)
+    except Exception as e:
+        print(f"[ERROR] Download failed: {e}")
+        await update.message.reply_text("❌ Error aaya reel download/send karne me.")
+        return
 
-        with open(video_path, "rb") as f:
+    with open(video_path, "rb") as f:
             await update.message.reply_video(f)
 
         await msg.delete()
 
     except Exception as e:
-        print("[ERROR] Download/send failed:", e)
-        await update.message.reply_text("❌ Error aaya reel download/send karne me.")
+    print("[ERROR] Download/send failed:", e)
+    await update.message.reply_text("❌ Error aaya reel download/send karne me.")
 
 
 async def fallback(update: Update, context: ContextTypes.DEFAULT_TYPE):
