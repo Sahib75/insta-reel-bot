@@ -112,7 +112,7 @@ def get_reel_info(url):
     ydl_opts = {
         "quiet": True,
         "cookiefile": "cookie.txt"
-        "format": "bestvideo+bestaudio/best",
+        "format": "mp4",
         "noplaylist": True,
         "nocheckcertificate": True,
         "cachedir": False,
@@ -134,7 +134,7 @@ def download_from_url(url, title):
         "cachedir": False,
         "quiet": True,
         "noplaylist": True,
-        "format": "bestvideo+bestaudio/best",
+        "format": "mp4",
         "proxy": SOCKS5_PROXY,
         "socket_timeout": 10,
         "force_ipv4": True,
