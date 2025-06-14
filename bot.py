@@ -88,12 +88,8 @@ if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
 cookie_path = "cookie.txt"
-
 if not os.path.exists(cookie_path):
-    print("🔐 Writing cookie from IG_COOKIE (header-style)...")
-    cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
-    with open(cookie_path, "w", encoding="utf-8", newline="\n") as f:
-        f.write(cookie_content)
+    exit("❌ Missing cookie.txt file. Run cookie_loader.py or check IG_COOKIE.")
 
 downloaded_reel_ids = set()
 
@@ -109,6 +105,11 @@ def clean_instagram_url(url):
 
 def get_reel_info(url):
     print(f"[DEBUG] Getting reel info: {url}")
+
+    set_random_proxy()
+    SOCKS5_PROXY = CURRENT_PROXY["value"]
+    print(f"🌍 Rotated Proxy: {SOCKS5_PROXY}")
+
     ydl_opts = {
         "quiet": True,
         "cookiefile": "cookie.txt",

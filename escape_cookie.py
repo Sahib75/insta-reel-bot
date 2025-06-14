@@ -1,17 +1,32 @@
 import json
+import codecs
 
-# Step 1 Load JSON cookie file
-with open("session_data.bin", "r", encoding="utf-8") as f:
-    cookies = json.load(f)
+cookie_path = "cookie.txt"
 
-# Step 2 Pick only required cookies
-required_names = {"ds_user_id", "sessionid", "csrftoken"}
-selected = [f"{c['name']}={c['value']}" for c in cookies if c["name"] in required_names]
 
-# Step 3 Join them as single header string
-header_cookie = "; ".join(selected)
-print("\nRaw Cookie:\n", header_cookie)
+# Parse Netscape format manually
+def parse_netscape_cookie(file_path):
+    cookie_parts = []
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.strip().startswith("#") or not line.strip():
+                continue
+            parts = line.strip().split("\t")
+            if len(parts) == 7:
+                name = parts[5]
+                value = parts[6]
+                cookie_parts.append(f"{name}={value}")
+    return "; ".join(cookie_parts)
 
-# ✅ ✅ Step 4 Escape it for Railway
-escaped = header_cookie.encode("unicode_escape").decode()
-print("\nEscaped Cookie for IG_COOKIE:\n", escaped)
+
+# Step 1: Read cookie from cookie.txt
+raw_cookie = parse_netscape_cookie(cookie_path)
+print("\n🔎 Raw Cookie:")
+print(raw_cookie)
+
+# Step 2: Escape the cookie
+escaped_cookie = codecs.encode(raw_cookie, "unicode_escape").decode()
+
+# Step 3: Final output
+print("\n✅ Paste this into Railway .env as IG_COOKIE:")
+print(f"\nIG_COOKIE={escaped_cookie}")
