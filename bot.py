@@ -19,9 +19,11 @@ import nest_asyncio
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 IG_COOKIE = os.getenv("IG_COOKIE")
 PROXY_LIST = os.getenv("ALL_PROXIES", "").split(",")
+
 ALL_PROXIES = os.getenv("ALL_PROXIES", "")
 PROXY_LIST = ALL_PROXIES.split(",") if ALL_PROXIES else []
-SOCKS5_PROXY = random.choice(proxy_list) if proxy_list else None
+
+SOCKS5_PROXY = random.choice(PROXY_LIST) if PROXY_LIST else None
 print("🌀 Using proxy:", SOCKS5_PROXY)
 
 def get_random_proxy():
