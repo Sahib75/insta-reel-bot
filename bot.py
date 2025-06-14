@@ -87,7 +87,7 @@ logging.basicConfig(level=logging.INFO)
 if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
-cookie_path = "session_data.bin"
+cookie_path = "cookie.txt"
 
 if not os.path.exists(cookie_path):
     print("🔐 Writing cookie from IG_COOKIE (header-style)...")
@@ -111,7 +111,7 @@ def get_reel_info(url):
     print(f"[DEBUG] Getting reel info: {url}")
     ydl_opts = {
         "quiet": True,
-        "cookiefile": "session_data.bin",
+        "cookiefile": "cookie.txt"
         "format": "bestvideo+bestaudio/best",
         "noplaylist": True,
         "nocheckcertificate": True,
@@ -129,7 +129,7 @@ def download_from_url(url, title):
 
     ydl_opts = {
         "outtmpl": "downloads/%(title).50s.%(ext)s",
-        "cookiefile": "session_data.bin",
+        "cookiefile": "cookie.txt",
         "nocheckcertificate": True,
         "cachedir": False,
         "quiet": True,
