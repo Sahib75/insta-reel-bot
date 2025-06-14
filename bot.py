@@ -167,18 +167,15 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Failed to fetch reel info.")
         return
 
-    try:
-        video_path = download_from_url(url, title, proxy)
-    except Exception as e:
-        print(f"[ERROR] Download failed: {e}")
-        await update.message.reply_text("❌ Error aaya reel download/send karne me.")
-        return
+try:
+    video_path = download_from_url(url, title, proxy)
 
     with open(video_path, "rb") as f:
         await update.message.reply_video(f)
-        await msg.delete()
-        
-    except Exception as e:
+
+    await msg.delete()  # ye bhi try block me hona chahiye
+
+except Exception as e:
     print("[ERROR] Download/send failed:", e)
     await update.message.reply_text("❌ Error aaya reel download/send karne me.")
 
