@@ -86,9 +86,13 @@ logging.basicConfig(level=logging.INFO)
 if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
-cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
-with open("session_data.bin", "w", encoding="utf-8", newline="\n") as f:
-    f.write(cookie_content)
+cookie_path = "session_data.bin"
+
+if not os.path.exists(cookie_path):
+    print("🔐 Writing cookie from IG_COOKIE...")
+    cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
+    with open(cookie_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(cookie_content)
 
 downloaded_reel_ids = set()
 
@@ -119,6 +123,9 @@ def get_reel_info(url):
 
 
 def download_from_url(url, title):
+    if not os.path.exists("downloads"):
+        os.makedirs("downloads")
+
     ydl_opts = {
         "outtmpl": "downloads/%(title).50s.%(ext)s",
         "cookiefile": "session_data.bin",
