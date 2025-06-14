@@ -111,7 +111,7 @@ def clean_instagram_url(url):
     return f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
 
 
-def get_reel_info(url):
+def get_reel_info(url, proxy):
     print(f"[DEBUG] Getting reel info: {url}")
     
     ydl_opts = {
