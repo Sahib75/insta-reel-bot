@@ -97,7 +97,7 @@ if not IG_COOKIE:
 
 cookie_path = "cookie.txt"
 if not os.path.exists(cookie_path):
-    exit("❌ Missing cookie.txt file. Run cookie_loader.py or check IG_COOKIE.")
+    exit("❌ Missing cookie.txt file. Run fix_cookie.py or check IG_COOKIE.")
 
 downloaded_reel_ids = set()
 
