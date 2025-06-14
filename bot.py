@@ -1,5 +1,6 @@
 import random
 import os
+import json
 import codecs
 import logging
 import traceback
@@ -89,7 +90,7 @@ if not IG_COOKIE:
 cookie_path = "session_data.bin"
 
 if not os.path.exists(cookie_path):
-    print("🔐 Writing cookie from IG_COOKIE...")
+    print("🔐 Writing cookie from IG_COOKIE (header-style)...")
     cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
     with open(cookie_path, "w", encoding="utf-8", newline="\n") as f:
         f.write(cookie_content)
