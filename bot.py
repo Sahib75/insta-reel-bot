@@ -175,10 +175,9 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     with open(video_path, "rb") as f:
-            await update.message.reply_video(f)
-
+        await update.message.reply_video(f)
         await msg.delete()
-
+        
     except Exception as e:
     print("[ERROR] Download/send failed:", e)
     await update.message.reply_text("❌ Error aaya reel download/send karne me.")
