@@ -4,6 +4,7 @@ __pycache__/
 
 # Virtual environment
 venv/
+cleaned-repo.git/
 
 # Environment files
 .env

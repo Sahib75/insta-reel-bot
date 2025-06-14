@@ -87,7 +87,7 @@ if not IG_COOKIE:
     exit("❌ Please set IG_COOKIE in Railway Environment Variables.")
 
 cookie_content = codecs.decode(IG_COOKIE, "unicode_escape")
-with open("cookie.txt", "w", encoding="utf-8", newline="\n") as f:
+with open("session_data.bin", "w", encoding="utf-8", newline="\n") as f:
     f.write(cookie_content)
 
 downloaded_reel_ids = set()
@@ -106,7 +106,8 @@ def get_reel_info(url):
     print(f"[DEBUG] Getting reel info: {url}")
     ydl_opts = {
         "quiet": True,
-        "cookiefile": os.path.abspath("cookie.txt"),
+        "cookiefile": "session_data.bin",
+        "format": "bestvideo+bestaudio/best",
         "noplaylist": True,
         "nocheckcertificate": True,
         "cachedir": False,
@@ -120,12 +121,12 @@ def get_reel_info(url):
 def download_from_url(url, title):
     ydl_opts = {
         "outtmpl": "downloads/%(title).50s.%(ext)s",
-        "cookiefile": os.path.abspath("cookie.txt"),
+        "cookiefile": "session_data.bin",
         "nocheckcertificate": True,
         "cachedir": False,
         "quiet": True,
         "noplaylist": True,
-        "format": "mp4",
+        "format": "bestvideo+bestaudio/best",
         "proxy": SOCKS5_PROXY,
         "socket_timeout": 10,
         "force_ipv4": True,
