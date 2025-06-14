@@ -113,9 +113,10 @@ def clean_instagram_url(url):
 
 def get_reel_info(url):
     print(f"[DEBUG] Getting reel info: {url}")
+    
     ydl_opts = {
         "quiet": True,
-        "cookiefile": os.path.abspath("cookie.txt"),
+        "cookiefile": "cookie.txt",
         "format": "mp4",
         "noplaylist": True,
         "nocheckcertificate": True,
@@ -161,7 +162,7 @@ async def download_reel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     set_random_proxy() 
     
     url = clean_reel_url(clean_instagram_url(update.message.text.strip()))
-    proxy = get_random_proxy()  # This is now used dynamically
+    proxy = get_random_proxy()  
     
     await update.message.reply_text("⏳ Downloading reel, please wait...")
 
